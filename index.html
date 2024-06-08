@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            transition: background-image 0.3s ease;
+        }
+
+        .background {
+            background-image: url('https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?cs=srgb&dl=background-blur-clean-531880.jpg&fm=jpg');
+            background-size: cover;
+            background-position: center;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: background-image 0.3s ease;
+        }
+
+        .dark-light-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            padding: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .dark-light-toggle:hover {
+            transform: scale(1.2);
+        }
+
+        .toggle-symbol {
+            font-size: 1.5rem;
+        }
+
+        .countdown-container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 100px;
+            padding: 150px; /* Increased padding for larger box */
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            width: 90%;
+            max-width: 800px; /* Adjust max width as needed */
+        }
+
+        .countdown-box {
+            display: inline-block;
+        }
+
+        .time-box {
+            display: inline-block;
+            margin: 0 20px;
+            font-size: 170px; /* Increased margin for larger boxes */
+        }
+
+        .label {
+            display: block;
+            margin-top: 10px; /* Increased margin for larger boxes */
+            font-size: 1.5rem; /* Increased font size for labels */
+        }
+
+        .dark-theme .background {
+            background-image: url('https://www.pixelstalk.net/wp-content/uploads/2016/07/3840x2160-Images-Free-Download.jpg');
+        }
+
+        .dark-theme .countdown-container {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+        }
+
+        .dark-theme .dark-light-toggle .toggle-symbol {
+            color: #fff;
+        }
+
+        .light-theme .dark-light-toggle .toggle-symbol {
+            color: #000;
+        }
+
+        .light-theme .background {
+            background-image: url('https://www.pixelstalk.net/wp-content/uploads/2016/12/Free-Beautiful-Landscape-Image.jpg');
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="dark-light-toggle" onclick="toggleTheme()">
+            <span class="toggle-symbol" id="themeSymbol">☀️</span>
+        </div>
+        <div class="countdown-container">
+            <div id="countdown" class="countdown-box">
+                <div class="time-box">
+                    <span id="days"></span>
+                    <span class="label">Days</span>
+                </div>
+                <div class="time-box">
+                    <span id="hours"></span>
+                    <span class="label">Hours</span>
+                </div>
+                <div class="time-box">
+                    <span id="minutes"></span>
+                    <span class="label">Minutes</span>
+                </div>
+                <div class="time-box">
+                    <span id="seconds"></span>
+                    <span class="label">Seconds</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const toggleButton = document.querySelector('.dark-light-toggle');
+            const themeSymbol = document.getElementById('themeSymbol');
+
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                body.style.backgroundImage = "url('https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?cs=srgb&dl=background-blur-clean-531880.jpg&fm=jpg')";
+                toggleButton.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+                toggleButton.style.color = '#000';
+                themeSymbol.innerText = '☀️';
+            } else {
+                body.classList.add('dark-theme');
+                body.style.backgroundImage = "url('https://www.pixelstalk.net/wp-content/uploads/2016/07/3840x2160-Images-Free-Download.jpg')";
+                toggleButton.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+                toggleButton.style.color = '#fff';
+                themeSymbol.innerText = '🌙';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const targetDate = new Date('2024-06-17T00:00:00').getTime();
+            const daysElement = document.getElementById('days');
+            const hoursElement = document.getElementById('hours');
+            const minutesElement = document.getElementById('minutes');
+            const secondsElement = document.getElementById('seconds');
+
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                daysElement.innerText = days;
+                hoursElement.innerText = hours;
+                minutesElement.innerText = minutes;
+                secondsElement.innerText = seconds;
+
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('countdown').innerHTML = 'Event Started';
+                }
+            }
+
+            const countdownInterval = setInterval(updateCountdown, 1000);
+            updateCountdown();
+        });
+    </script>
+</body>
+</html>
